@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter.colorchooser import askcolor
 from pathlib import Path
 from PIL import Image, ImageTk
-
+import tkinter.font as tkfont
 
 class SettingsWindow(tk.Toplevel):
     def __init__(self, master, apply_settings_callback):
@@ -11,31 +11,39 @@ class SettingsWindow(tk.Toplevel):
         self.master = master
 
         self.title("Nastavení")
-        self.geometry("300x400")
+        self.geometry("300x450")
         self.apply_settings_callback = apply_settings_callback
 
-        # Převzetí aktuálních barev z hlavní aplikace
+        # Převzetí aktuálních barev a fontu z hlavní aplikace
         self.text_color = self.master.text_color
         self.bg_color = self.master.bg_color
+        self.font_family = self.master.font_family  # nový atribut
 
-        # Font size options
+        # --- Velikost písma ---
         self.font_size_var = tk.StringVar(value="Střední")
         tk.Label(self, text="Velikost písma:").pack(anchor="w", padx=10, pady=5)
         font_sizes = ["Malá", "Střední", "Velká"]
         self.font_size_menu = ttk.Combobox(self, textvariable=self.font_size_var, values=font_sizes, state="readonly")
         self.font_size_menu.pack(fill="x", padx=10)
 
-        # Text color picker
+        # --- Font písma ---
+        tk.Label(self, text="Styl písma:").pack(anchor="w", padx=10, pady=5)
+        fonts = sorted(set(tkfont.families()))
+        self.font_family_var = tk.StringVar(value=self.font_family)
+        self.font_family_menu = ttk.Combobox(self, textvariable=self.font_family_var, values=fonts, state="readonly")
+        self.font_family_menu.pack(fill="x", padx=10)
+
+        # --- Barva písma ---
         tk.Label(self, text="Barva písma:").pack(anchor="w", padx=10, pady=5)
         self.text_color_btn = tk.Button(self, text="Vybrat barvu", command=self.pick_text_color)
         self.text_color_btn.pack(padx=10, pady=5)
 
-        # Background color picker
+        # --- Barva pozadí ---
         tk.Label(self, text="Barva pozadí:").pack(anchor="w", padx=10, pady=5)
         self.bg_color_btn = tk.Button(self, text="Vybrat barvu", command=self.pick_bg_color)
         self.bg_color_btn.pack(padx=10, pady=5)
 
-        # Save button
+        # --- Uložit ---
         self.save_btn = tk.Button(self, text="Použít", command=self.apply_settings)
         self.save_btn.pack(pady=20)
 
